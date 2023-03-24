@@ -87,4 +87,21 @@ $ nats --context contexts/east-user.json req js.in.orders 1
 {"stream":"ORDERS_EAST", "seq":5}
 ```
 
+After a short while all streams hold the same data.
+
+```
+╭───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                             Stream Report                                                             │
+├────────────────┬─────────┬──────────────────────┬───────────┬──────────┬───────┬──────┬─────────┬─────────────────────────────────────┤
+│ Stream         │ Storage │ Placement            │ Consumers │ Messages │ Bytes │ Lost │ Deleted │ Replicas                            │
+├────────────────┼─────────┼──────────────────────┼───────────┼──────────┼───────┼──────┼─────────┼─────────────────────────────────────┤
+│ GLOBAL         │ File    │                      │         0 │ 0        │ 0 B   │ 0    │       0 │ n1-central, n2-west*, n3-east       │
+│ ORDERS_CENTRAL │ File    │ tags: region:central │         0 │ 5        │ 399 B │ 0    │       0 │ n1-central, n2-central*, n3-central │
+│ ORDERS_EAST    │ File    │ tags: region:east    │         0 │ 5        │ 405 B │ 0    │       0 │ n1-east*, n2-east, n3-east          │
+│ ORDERS_WEST    │ File    │ tags: region:west    │         0 │ 5        │ 456 B │ 0    │       0 │ n1-west*, n2-west, n3-west          │
+╰────────────────┴─────────┴──────────────────────┴───────────┴──────────┴───────┴──────┴─────────┴─────────────────────────────────────╯
+```
+
 This allows portable publishers to be built, consumers will need to know the region they are in and bind to the correct stream.
+
+
